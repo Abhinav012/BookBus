@@ -17,11 +17,13 @@ class SeatSelectionViewController: UIViewController {
     
     @IBOutlet weak var travelDetailsViewBottomConstraint: NSLayoutConstraint!
     @IBOutlet weak var navBarHeightConstraint: NSLayoutConstraint!
-    
     @IBOutlet weak var colectionViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var scrollContentViewHeightConstraint: NSLayoutConstraint!
-    
     @IBOutlet weak var upperCollectionViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var heightConstraintForSeatConfirmationView: NSLayoutConstraint!
+    
+    
+    @IBOutlet weak var seatConfirmationView: UIView!
     @IBOutlet weak var lowerUpperControl: UISegmentedControl!
     var busType = "seater"
     
@@ -52,6 +54,10 @@ class SeatSelectionViewController: UIViewController {
         colectionViewHeightConstraint.constant = height
         upperCollectionViewHeightConstraint.constant = height
         scrollContentViewHeightConstraint.constant = height+1068-880
+        
+        heightConstraintForSeatConfirmationView.constant = 0
+        seatConfirmationView.clipsToBounds = false
+        seatConfirmationView.setupShadow(color: #colorLiteral(red: 0.6666666865, green: 0.6666666865, blue: 0.6666666865, alpha: 1))
         self.view.layoutIfNeeded()
         
         
@@ -253,10 +259,28 @@ extension SeatSelectionViewController: UICollectionViewDelegate, UICollectionVie
         if !(indexPath.row<=3) && indexPath.row != 4 && !((indexPath.row-2)%5 == 0 && indexPath.row != 87) && busType == "seater" {
             let cell = collectionView.cellForItem(at: indexPath) as! SeatCollectionViewCell
             cell.updateImage()
+            
+            if cell.isInSelectedState{
+                heightConstraintForSeatConfirmationView.constant = 51
+            }else{
+                 heightConstraintForSeatConfirmationView.constant = 0
+            }
+        
         }
         else if busType == "sleeper" && (indexPath.row-1)%4 != 0{
             let cell = collectionView.cellForItem(at: indexPath) as! SleeperCollectionViewCell
            cell.updatebearthSelection()
+            
+            if cell.isInSelectedState{
+                heightConstraintForSeatConfirmationView.constant = 51
+            }else{
+                heightConstraintForSeatConfirmationView.constant = 0
+            }
+        }
+        
+        
+        UIView.animate(withDuration: 0.3) {
+            self.view.layoutIfNeeded()
         }
     }
     
